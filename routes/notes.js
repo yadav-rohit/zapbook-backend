@@ -50,7 +50,7 @@ router.post(
   }
 );
 
-//Route 3 to update note . POST "/api/notes/updatetenote" . login req
+//Route 3 to update note . PUT "/api/notes/updatetenote" . login req
 router.put("/updatenote/:id", fetchUser ,  async (req, res) => {
   try {
     const { title, description, tag } = req.body;
@@ -76,15 +76,16 @@ router.put("/updatenote/:id", fetchUser ,  async (req, res) => {
   }
 });
 
-//Route 4 to delete note . POST "/api/notes/deletenote" . login req
+//Route 4 to delete note . DELETE "/api/notes/deletenote" . login req
 router.delete("/deletenote/:id", fetchUser ,  async (req, res) => {
   try {
 
-    //finding the note to update and updating it
+    //finding the note to be deleted and delete it
     let note = await Notes.findById(req.params.id);
     if(!note){
       res.status(404).send("Not found");
     }
+    //checking wether the person deleting owns the note or not
     if(note.user.toString() !== req.user.id){
       return res.status(404).send("Not Allowed");
     }
