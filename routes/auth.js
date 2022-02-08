@@ -64,6 +64,7 @@ router.post("/login", [
   body('email' , 'Enter a Valid Email').isEmail(),
   body('password' , "Password can't be blank").exists(),
 ] , async(req , res) => {
+  let success = false;
   //returns error 
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -78,8 +79,9 @@ router.post("/login", [
     }
 //here we take password and compare there hash
     const passCompare = await bcrypt.compare(password , user.password);
-    if(!passCompare){
-      return res.status(400).json({error: "Wrong Credentials"});
+    if(!passCompare){ 
+      success = false;
+      return res.status(400).json({success , error: "Wrong Credentials"});
     }
     // creating payload
     const data = {
@@ -88,8 +90,9 @@ router.post("/login", [
       }
     }
     const authToken = jwt.sign(data , JWT_SECRET);
+    success = true;
     //we provide a token to user 
-    res.json({authToken});
+    res.json({success , authToken});
   } catch (error) {
     console.error(error.message);
     res.status(500).send("internal server error");
