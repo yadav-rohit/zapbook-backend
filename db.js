@@ -1,7 +1,9 @@
 const mongoose = require("mongoose");
+require('dotenv').config();
 
+//Make sure to make an .env file to store you db link
 const mongoURI =
-  "mongodb://localhost:27017/zapbook?readPreference=primary&appname=MongoDB%20Compass&ssl=false";
+process.env.DB_LINK;
 
 const connectToMongo = () => {
   mongoose.connect(mongoURI, () => {
